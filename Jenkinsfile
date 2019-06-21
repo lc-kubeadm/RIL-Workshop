@@ -1,5 +1,5 @@
 
-properties([[$class: 'JiraProjectProperty', siteName: 'https://lovescloud.atlassian.net/'], pipelineTriggers([githubPush()])])
+//properties([[$class: 'JiraProjectProperty', siteName: 'https://lovescloud.atlassian.net/'], pipelineTriggers([githubPush()])])
 node {
    def mvnHome
    def scannerHome
@@ -29,7 +29,7 @@ node {
       }
    }
 
-
+/*
    stage('Docker Build') {
       sh"""#!/bin/bash
          docker build . -t crud-mysql-vuejs:${BUILD_NUMBER}
@@ -43,7 +43,7 @@ node {
              docker push nexus.loves.cloud:8083/crud-mysql-vuejs:${BUILD_NUMBER}
              docker tag  nexus.loves.cloud:8083/crud-mysql-vuejs:${BUILD_NUMBER} crud-mysql-vuejs:${BUILD_NUMBER}
           """
-      }*/
+      }
 
       withDockerRegistry(credentialsId: 'dockerhub') {
          sh"""#!/bin/bash
@@ -84,5 +84,5 @@ node {
       emailext body: " ${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}", to: 'rajni@loves.cloud,rajnikhattarrsinha@gmail.com'
 
    }
-   
+  */ 
   }
