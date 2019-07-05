@@ -67,18 +67,21 @@ node {
       sh"""#!/bin/bash
       cat docker-compose.yaml
       kompose convert
+      ls -las
       sudo mkdir ${BUILD_NUMBER}-kompose/
+      ls -las ${BUILD_NUMBER}-kompose/
       sudo chown jenkins:jenkins ${BUILD_NUMBER}-kompose/
       
       """
    }
    
 
-   stage('Cleanup') {
+   /*stage('Cleanup') {
       
       cleanWs disableDeferredWipeout: true, notFailBuild: true
       emailext body: " ${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}", to: 'rajnikhattarrsinha@loves.cloud,rajnikhattarrsinha@gmail.com'
 
    }
+   */
   
   }
