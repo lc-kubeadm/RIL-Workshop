@@ -4,7 +4,7 @@ node {
    def mvnHome
    def scannerHome
    stage('SCM CheckOut') {
-     // cleanWs disableDeferredWipeout: true, notFailBuild: true
+      cleanWs disableDeferredWipeout: true, notFailBuild: true
       git branch: 'develop', url: 'https://github.com/LovesCloud/RIL-Workshop.git'           
       mvnHome = tool 'M3'
      // def commit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat')
