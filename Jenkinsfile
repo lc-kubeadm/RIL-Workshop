@@ -71,7 +71,13 @@ node {
       sudo mkdir ${BUILD_NUMBER}-kompose/
       ls -las ${BUILD_NUMBER}-kompose/
       sudo chown jenkins:jenkins ${BUILD_NUMBER}-kompose/
-      
+      sudo mv crud-mysql-vuejs-* ${BUILD_NUMBER}-kompose/
+      sudo mv hk-mysql-* ${BUILD_NUMBER}-kompose/
+      cd ${BUILD_NUMBER}-kompose/
+      for f in * ; do mv -- "\$f" "${BUILD_NUMBER}_\$f" ; done
+      cd ..
+      kubectl apply -f ${BUILD_NUMBER}-kompose/
+      sleep 10
       """
    }
    
