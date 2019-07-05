@@ -60,7 +60,7 @@ node {
       
    }
    
-/*
+
    stage('Deploy') {
       sh label: '', script: '''sed -i \'s/IMAGE/image: lovescloud\\/crud-mysql-vuejs:\'${BUILD_NUMBER}\'/\' docker-compose.yaml
 '''
@@ -79,7 +79,7 @@ node {
       sleep 10
       """
    }
-   */
+   
 
    stage('Cleanup') {
       
