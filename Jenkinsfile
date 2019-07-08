@@ -19,16 +19,16 @@ node {
         
    }
    
-   stage('Test-JUnit') {
+   /*stage('Test-JUnit') {
       sh "'${mvnHome}/bin/mvn' test surefire-report:report"
    }
    
-   stage('Sonar Code Analysis') {
+  stage('Sonar Code Analysis') {
       withSonarQubeEnv('SonarQube') {
         sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectName=RIL-Workshop -Dsonar.projectKey=RILW -Dsonar.sources=src -Dsonar.java.binaries=target/"
       }
    }
-
+*/
 
    stage('Docker Build') {
       sh"""#!/bin/bash
@@ -38,14 +38,14 @@ node {
 
    stage('Nexus-Push') {
       
-      /*withDockerRegistry(credentialsId: 'nexus', url: 'http://nexus.loves.cloud:8083') {
+    withDockerRegistry(credentialsId: 'nexus', url: 'http://nexus.loves.cloud:8083') {
           sh"""#!/bin/bash
              docker tag crud-mysql-vuejs:${BUILD_NUMBER} nexus.loves.cloud:8083/crud-mysql-vuejs:${BUILD_NUMBER}
              docker push nexus.loves.cloud:8083/crud-mysql-vuejs:${BUILD_NUMBER}
              docker tag  nexus.loves.cloud:8083/crud-mysql-vuejs:${BUILD_NUMBER} crud-mysql-vuejs:${BUILD_NUMBER}
           """
       }
-      */
+     
 
       withDockerRegistry(credentialsId: 'dockerhub') {
          sh"""#!/bin/bash
@@ -61,6 +61,7 @@ node {
    }
    
 
+   /*
    stage('Deploy') {
       sh label: '', script: '''sed -i \'s/IMAGE/image: lovescloud\\/crud-mysql-vuejs:\'${BUILD_NUMBER}\'/\' docker-compose.yaml
 '''
@@ -81,8 +82,7 @@ node {
       """
    }
    
-
-   /*stage('Cleanup') {
+stage('Cleanup') {
       
       cleanWs disableDeferredWipeout: true, notFailBuild: true
       emailext body: " ${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}",subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}", to: 'rajnikhattarrsinha@loves.cloud,rajnikhattarrsinha@gmail.com'
