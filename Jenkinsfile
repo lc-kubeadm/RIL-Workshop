@@ -11,6 +11,7 @@ node {
       //def matcher = commit =~ ([a-zA-Z][a-zA-Z0-9_]+-[1-9][0-9]*)([^.]|\.[^0-9]|\.$|$)
       //print commit
       //print matcher
+      //test
       scannerHome = tool 'sonar_scanner';
    }
 
