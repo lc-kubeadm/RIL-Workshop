@@ -62,6 +62,15 @@ node {
       
    }
    
+     stage("Docker Scan"){
+      sshagent(['jenkins']) {
+       sh"""#!/bin/bash
+       CLAIR_ADDR=http://35.202.31.140:6060 CLAIR_OUTPUT=Low CLAIR_THRESHOLD=10  JSON_OUTPUT=true klar lovescloud/crud-mysql-vuejs:${BUILD_NUMBER} | jq '.' | cat > crud-mysql-vuejs:${BUILD_NUMBER}.json
+          """
+    }
+    sh label: '', script: 'sudo cp /var/lib/jenkins/workspace/RILW/crud-mysql-vuejs\\:${BUILD_NUMBER}.json /var/www/html/'
+    }
+   
 
    stage('Deploy') {
       sh label: '', script: '''sed -i \'s/IMAGE/image: lovescloud\\/crud-mysql-vuejs:\'${BUILD_NUMBER}\'/\' docker-compose.yaml
