@@ -25,10 +25,11 @@ node {
    }
    
   stage('Sonar Code Analysis') {
-      withSonarQubeEnv('SonarQube') {
+      /*withSonarQubeEnv('SonarQube') {
          //testing sonar
         sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectName=RIL-Workshop -Dsonar.projectKey=RILW -Dsonar.sources=src -Dsonar.java.binaries=target/"
       }
+      */
    }
 
 
@@ -53,7 +54,7 @@ node {
    stage("Image Scan"){
       sshagent(['jenkins']) {
        sh"""#!/bin/bash
-       CLAIR_ADDR=http://35.202.31.140:6060 CLAIR_OUTPUT=Low CLAIR_THRESHOLD=10  JSON_OUTPUT=true klar lovescloud/crud-mysql-vuejs:${BUILD_NUMBER} | jq '.' | cat > crud-mysql-vuejs:${BUILD_NUMBER}.json
+       CLAIR_ADDR=http://35.184.99.184:6060 CLAIR_OUTPUT=Low CLAIR_THRESHOLD=10  JSON_OUTPUT=true klar lovescloud/crud-mysql-vuejs:${BUILD_NUMBER} | jq '.' | cat > crud-mysql-vuejs:${BUILD_NUMBER}.json
           """
     }
     sh label: '', script: 'sudo cp /var/lib/jenkins/workspace/RILW/crud-mysql-vuejs\\:${BUILD_NUMBER}.json /var/www/html/'
@@ -86,7 +87,8 @@ node {
    
    
 
-  /* stage('Deploy') {
+   stage('Deploy') {
+  /*
       sh label: '', script: '''sed -i \'s/IMAGE/image: lovescloud\\/crud-mysql-vuejs:\'${BUILD_NUMBER}\'/\' docker-compose.yaml
 '''
       sh"""#!/bin/bash
@@ -104,6 +106,19 @@ node {
       kubectl apply -f ${BUILD_NUMBER}-kompose/
       sleep 10
       """
+      */
+      withDockerRegistry(credentialsId: 'dockerhub') {
+         sh"""#!/bin/bash
+             docker tag crud-mysql-vuejs:${BUILD_NUMBER} lovescloud/crud-mysql-vuejs:${BUILD_NUMBER}
+             docker push lovescloud/crud-mysql-vuejs:${BUILD_NUMBER}
+          """
+      }
+
+      sh"""#!/bin/bash
+         docker rmi lovescloud/crud-mysql-vuejs:${BUILD_NUMBER}
+      """
+      
+   
    }
    
 stage('Cleanup') {
